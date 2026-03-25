@@ -230,17 +230,17 @@ export default function VibePage() {
         </div>
 
         {/* Progress bar */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {selected.steps.map((s, i) => (
-            <div key={s.id} className="flex-1 h-1.5 rounded-full overflow-hidden bg-white/20">
+            <div key={s.id} className="flex-1 h-2 rounded-full overflow-hidden bg-white/20">
               <div className="h-full rounded-full transition-all duration-500"
-                style={{ width: i < step ? '100%' : i === step ? '50%' : '0%', backgroundColor: selected.color }} />
+                style={{ width: i < step ? '100%' : i === step ? '60%' : '0%', backgroundColor: selected.color }} />
             </div>
           ))}
         </div>
-        <div className="flex justify-between mt-1">
-          <span className="text-white/40 text-[10px]">Step {step + 1} of {totalSteps}</span>
-          <span className="text-white/40 text-[10px]">{Math.round(((step + 1) / totalSteps) * 100)}% complete</span>
+        <div className="flex justify-between mt-1.5">
+          <span className="text-white/50 text-xs font-medium">Step {step + 1} of {totalSteps}</span>
+          <span className="text-white/50 text-xs font-medium">{Math.round(((step + (actionDone ? 1 : 0.5)) / totalSteps) * 100)}% complete</span>
         </div>
       </div>
 
@@ -300,7 +300,9 @@ export default function VibePage() {
 
           <button onClick={nextStep} disabled={!actionDone}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white disabled:opacity-30 hover:scale-105"
-            style={{ backgroundColor: actionDone ? selected.color : 'rgba(255,255,255,0.1)', borderColor: actionDone ? selected.color : 'rgba(255,255,255,0.1)', border: '1px solid' }}>
+            style={actionDone
+              ? { backgroundColor: selected.color, borderWidth: '1px', borderStyle: 'solid', borderColor: selected.color }
+              : { backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.1)' }}>
             {step === totalSteps - 1 ? 'Complete! 🎉' : 'Next Step'}
             <ChevronRight size={16} />
           </button>
