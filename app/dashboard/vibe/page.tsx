@@ -148,7 +148,7 @@ export default function VibePage() {
             <p className="text-slate-400 text-lg">Try activities virtually before joining real events</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {ACTIVITIES.map(activity => {
               const isDone = completed.includes(activity.id)
               return (
@@ -166,7 +166,7 @@ export default function VibePage() {
                     </div>
                   )}
 
-                  <div className="relative z-10 p-6 pt-16">
+                  <div className="relative z-10 p-4 sm:p-6 pt-12 sm:pt-16">
                     <div className="text-5xl mb-3">{activity.emoji}</div>
                     <h3 className="text-white font-black text-xl mb-1">{activity.title}</h3>
                     <p className="text-white/60 text-sm mb-4">{activity.desc}</p>

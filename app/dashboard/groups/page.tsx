@@ -43,7 +43,7 @@ export default function GroupsPage() {
       {filtered.some(g => g.joined) && (
         <div className="mb-8">
           <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Your Groups</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
             {filtered.filter(g => g.joined).map(group => (
               <GroupCard key={group.id} group={group} onJoin={handleJoin} onLeave={handleLeave} />
             ))}
@@ -54,7 +54,7 @@ export default function GroupsPage() {
       {/* Discover */}
       <div>
         <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Discover Groups</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
           {filtered.filter(g => !g.joined).map(group => (
             <GroupCard key={group.id} group={group} onJoin={handleJoin} onLeave={handleLeave} />
           ))}
@@ -66,9 +66,9 @@ export default function GroupsPage() {
 
 function GroupCard({ group, onJoin, onLeave }: any) {
   return (
-    <div className={`rounded-2xl border p-5 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 ${group.joined ? 'bg-purple-900/30 border-purple-700/50' : 'bg-slate-800/70 border-slate-700/50 hover:border-purple-500/50'}`}>
-      <div className="flex items-start gap-4">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-2xl shrink-0 shadow-lg">
+    <div className={`rounded-2xl border p-3 sm:p-5 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 ${group.joined ? 'bg-purple-900/30 border-purple-700/50' : 'bg-slate-800/70 border-slate-700/50 hover:border-purple-500/50'}`}>
+      <div className="flex items-start gap-2 sm:gap-4">
+        <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-xl sm:text-2xl shrink-0 shadow-lg">
           {group.emoji}
         </div>
         <div className="flex-1 min-w-0">

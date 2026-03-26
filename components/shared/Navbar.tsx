@@ -1,22 +1,28 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useApp } from '@/lib/context'
-import { Zap, Bell, BookOpen, Palette, Menu, X, Clock, Users, Trophy, Calendar } from 'lucide-react'
+import { Zap, Bell, BookOpen, Palette, X, Clock, Users, Trophy, Calendar, LayoutDashboard, Map, Star, Music, Flame, UserCircle } from 'lucide-react'
 
 const notifIcons = { deadline: Clock, team: Users, challenge: Trophy, event: Calendar }
-const notifColors = { deadline: 'text-red-500 bg-red-50', team: 'text-blue-500 bg-blue-50', challenge: 'text-amber-500 bg-amber-50', event: 'text-green-500 bg-green-50' }
+const notifColors = {
+  deadline: 'text-red-500 bg-red-50',
+  team: 'text-blue-500 bg-blue-50',
+  challenge: 'text-amber-500 bg-amber-50',
+  event: 'text-green-500 bg-green-50',
+}
 
 export default function Navbar() {
-  const { mode, setMode, isTransitioning, user, notifications, unreadCount, markAllRead } = useApp()
+  const { mode, setMode, user, notifications, unreadCount, markAllRead } = useApp()
   const router = useRouter()
+  const pathname = usePathname()
   const [showNotif, setShowNotif] = useState(false)
-  const [showMenu, setShowMenu] = useState(false)
   const [switching, setSwitching] = useState(false)
-  const [switchLabel, setSwitchLabel] = useState('')
+  const [switchTarget, setSwitchTarget] = useState<'study' | 'fun'>('fun')
   const notifRef = useRef<HTMLDivElement>(null)
   const isStudy = mode === 'study'
+  const funAccent = '#7C3AED'
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -28,70 +34,98 @@ export default function Navbar() {
 
   const handleToggle = () => {
     const next = isStudy ? 'fun' : 'study'
-    setSwitchLabel(`Switching to ${next === 'study' ? 'Study' : 'Fun'} Mode...`)
+    setSwitchTarget(next)
     setSwitching(true)
-    setTimeout(() => setSwitching(false), 1200)
-    setMode(next)
-    router.push('/dashboard')
+    setTimeout(() => { setMode(next); router.push('/dashboard') }, 350)
+    setTimeout(() => setSwitching(false), 900)
   }
 
   const studyLinks = [
-    ['Dashboard', '/dashboard'],
-    ['Events', '/dashboard/events'],
-    ['Opp. Map', '/dashboard/map'],
-    ['Teams', '/dashboard/teams'],
-    ['Challenges', '/dashboard/challenges'],
+    { label: 'Home', href: '/dashboard', icon: LayoutDashboard },
+    { label: 'Events', href: '/dashboard/events', icon: Flame },
+    { label: 'Map', href: '/dashboard/map', icon: Map },
+    { label: 'Teams', href: '/dashboard/teams', icon: Users },
+    { label: 'Challenges', href: '/dashboard/challenges', icon: Trophy },
   ]
   const funLinks = [
-    ['Dashboard', '/dashboard'],
-    ['Hobby Events', '/dashboard/hobby-events'],
-    ['Groups', '/dashboard/groups'],
-    ['Vibe Mode', '/dashboard/vibe'],
-    ['Challenges', '/dashboard/challenges'],
+    { label: 'Home', href: '/dashboard', icon: LayoutDashboard },
+    { label: 'Hobbies', href: '/dashboard/hobby-events', icon: Star },
+    { label: 'Groups', href: '/dashboard/groups', icon: Users },
+    { label: 'Vibe', href: '/dashboard/vibe', icon: Music },
+    { label: 'Challenges', href: '/dashboard/challenges', icon: Trophy },
   ]
   const links = isStudy ? studyLinks : funLinks
 
+  const isActive = (href: string) => pathname === href
+
   return (
     <>
-      {/* Mode switching overlay */}
+      {/* ── MODE SWITCH OVERLAY ── */}
       {switching && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none">
-          <div className={`px-8 py-4 rounded-2xl text-white font-bold text-lg shadow-2xl backdrop-blur-md transition-all ${isStudy ? 'bg-purple-600/90' : 'bg-blue-600/90'}`}>
-            {switchLabel}
+        <div className="mode-switch-overlay">
+          <div className="mode-switch-ripple"
+            style={{ background: switchTarget === 'fun' ? 'linear-gradient(135deg, #7C3AED, #EC4899)' : 'linear-gradient(135deg, #2563EB, #3B82F6)' }} />
+          <div className="mode-switch-content">
+            <div className="text-6xl mb-3">{switchTarget === 'fun' ? '🎉' : '📚'}</div>
+            <p className="text-white font-black text-2xl drop-shadow-lg">
+              {switchTarget === 'fun' ? 'Fun Mode' : 'Study Mode'}
+            </p>
+            <p className="text-white/70 text-sm mt-1">
+              {switchTarget === 'fun' ? 'Time to explore & enjoy!' : 'Time to grow & learn!'}
+            </p>
           </div>
         </div>
       )}
 
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isStudy ? 'bg-white/95 border-b border-slate-100' : 'bg-black/40 border-b border-white/5'} backdrop-blur-xl shadow-sm`}>
+      {/* ── TOP NAVBAR (desktop + mobile top bar) ── */}
+      <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-500 ${isStudy ? 'bg-gradient-to-br from-blue-600 to-blue-700' : 'bg-gradient-to-br from-purple-600 to-pink-600'}`}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300"
+              style={{ background: isStudy ? 'linear-gradient(135deg, #2563EB, #1D4ED8)' : `linear-gradient(135deg, ${funAccent}, #EC4899)` }}>
               <Zap size={16} className="text-white" />
             </div>
-            <span className={`text-xl font-bold transition-all duration-500 ${isStudy ? 'text-slate-900' : 'text-white'}`}>Duozy</span>
+            <span className="text-xl font-bold text-slate-900">Duozy</span>
+            <span className="hidden sm:flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold transition-all duration-300"
+              style={isStudy ? { backgroundColor: '#EFF6FF', color: '#2563EB' } : { backgroundColor: '#F5F3FF', color: funAccent }}>
+              {isStudy ? <BookOpen size={9} /> : <Palette size={9} />}
+              {isStudy ? 'Study' : 'Fun'}
+            </span>
           </Link>
 
-          {/* Nav links desktop */}
+          {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1">
-            {links.map(([label, href]) => (
-              <NavLink key={href} href={href} label={label} mode={mode} />
+            {links.map(({ label, href, icon: Icon }) => (
+              <Link key={href} href={href}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  isActive(href)
+                    ? 'bg-blue-50 text-blue-600 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}>
+                <Icon size={14} />
+                {label}
+              </Link>
             ))}
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             {/* Mode Toggle */}
-            <div className="flex items-center gap-2">
-              <span className={`text-xs font-semibold hidden sm:block ${isStudy ? 'text-blue-600' : 'text-purple-400'}`}>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-slate-500 hidden sm:block">
                 {isStudy ? 'Study' : 'Fun'}
               </span>
               <button onClick={handleToggle}
-                className={`relative flex items-center w-16 h-8 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                  isStudy ? 'bg-blue-600 focus:ring-blue-400' : 'bg-gradient-to-r from-purple-600 to-pink-600 focus:ring-purple-400'
-                }`}>
-                <span className={`absolute flex items-center justify-center w-6 h-6 bg-white rounded-full shadow-md transition-all duration-500 ${isStudy ? 'left-1' : 'left-9'}`}>
-                  {isStudy ? <BookOpen size={12} className="text-blue-600" /> : <Palette size={12} className="text-purple-600" />}
+                className="relative flex items-center w-14 h-7 md:w-16 md:h-8 rounded-full transition-all duration-500 focus:outline-none"
+                style={isStudy
+                  ? { backgroundColor: '#2563EB', boxShadow: '0 2px 8px rgba(37,99,235,0.4)' }
+                  : { background: `linear-gradient(135deg, ${funAccent}, #EC4899)`, boxShadow: `0 2px 8px rgba(124,58,237,0.4)` }}>
+                <span className={`absolute flex items-center justify-center w-5 h-5 md:w-6 md:h-6 bg-white rounded-full shadow-md transition-all duration-500 ${isStudy ? 'left-1' : 'left-8 md:left-9'}`}>
+                  {isStudy
+                    ? <BookOpen size={10} className="text-blue-600" />
+                    : <Palette size={10} style={{ color: funAccent }} />}
                 </span>
               </button>
             </div>
@@ -99,32 +133,32 @@ export default function Navbar() {
             {/* Notifications */}
             <div className="relative" ref={notifRef}>
               <button onClick={() => { setShowNotif(!showNotif); if (!showNotif) markAllRead() }}
-                className={`relative p-2 rounded-xl transition-all duration-200 ${isStudy ? 'hover:bg-slate-100 text-slate-600' : 'hover:bg-white/10 text-slate-300'}`}>
-                <Bell size={20} />
+                className="relative p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition-all">
+                <Bell size={18} />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-bounce">
+                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
                     {unreadCount}
                   </span>
                 )}
               </button>
               {showNotif && (
-                <div className={`absolute right-0 top-12 w-80 rounded-2xl shadow-2xl border overflow-hidden z-50 ${isStudy ? 'bg-white border-slate-100' : 'bg-slate-800 border-slate-700'}`}>
-                  <div className={`px-4 py-3 border-b flex items-center justify-between ${isStudy ? 'border-slate-100' : 'border-slate-700'}`}>
-                    <span className={`font-bold text-sm ${isStudy ? 'text-slate-900' : 'text-white'}`}>Notifications</span>
+                <div className="absolute right-0 top-12 w-72 md:w-80 rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-50 bg-white animate-slide-up">
+                  <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+                    <span className="font-bold text-sm text-slate-900">Notifications</span>
                     <span className="text-xs text-blue-500 cursor-pointer hover:underline" onClick={markAllRead}>Mark all read</span>
                   </div>
-                  <div className="max-h-80 overflow-y-auto">
+                  <div className="max-h-72 overflow-y-auto">
                     {notifications.map(n => {
                       const Icon = notifIcons[n.type]
                       const colorClass = notifColors[n.type]
                       return (
-                        <div key={n.id} className={`flex gap-3 px-4 py-3 border-b last:border-0 transition-colors ${isStudy ? 'border-slate-50 hover:bg-slate-50' : 'border-slate-700 hover:bg-slate-700/50'} ${!n.read ? (isStudy ? 'bg-blue-50/50' : 'bg-purple-900/20') : ''}`}>
+                        <div key={n.id} className={`flex gap-3 px-4 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-colors ${!n.read ? 'bg-blue-50/40' : ''}`}>
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${colorClass}`}>
                             <Icon size={14} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className={`text-sm font-semibold truncate ${isStudy ? 'text-slate-900' : 'text-white'}`}>{n.title}</p>
-                            <p className={`text-xs truncate ${isStudy ? 'text-slate-500' : 'text-slate-400'}`}>{n.message}</p>
+                            <p className="text-sm font-semibold text-slate-900 truncate">{n.title}</p>
+                            <p className="text-xs text-slate-500 truncate">{n.message}</p>
                             <p className="text-xs text-slate-400 mt-0.5">{n.time}</p>
                           </div>
                           {!n.read && <div className="w-2 h-2 bg-blue-500 rounded-full mt-1 shrink-0" />}
@@ -138,42 +172,63 @@ export default function Navbar() {
 
             {/* Profile */}
             <Link href="/profile" className="flex items-center gap-2 group">
-              <div className={`w-8 h-8 rounded-xl overflow-hidden border-2 transition-all duration-200 group-hover:scale-110 ${isStudy ? 'border-slate-200' : 'border-purple-500'}`}>
+              <div className="w-8 h-8 rounded-xl overflow-hidden border-2 border-slate-200 transition-all group-hover:scale-110 group-hover:border-blue-300">
                 <img src={user?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=user'} alt="avatar" className="w-full h-full object-cover" />
               </div>
-              <span className={`hidden sm:block text-sm font-semibold transition-colors ${isStudy ? 'text-slate-700' : 'text-slate-200'}`}>
+              <span className="hidden sm:block text-sm font-semibold text-slate-700">
                 {user?.name?.split(' ')[0] || 'You'}
               </span>
             </Link>
-
-            {/* Mobile menu */}
-            <button onClick={() => setShowMenu(!showMenu)} className={`md:hidden p-2 rounded-xl ${isStudy ? 'text-slate-600 hover:bg-slate-100' : 'text-slate-300 hover:bg-white/10'}`}>
-              {showMenu ? <X size={20} /> : <Menu size={20} />}
-            </button>
           </div>
         </div>
-
-        {/* Mobile menu */}
-        {showMenu && (
-          <div className={`md:hidden border-t px-4 py-4 space-y-1 ${isStudy ? 'bg-white border-slate-100' : 'bg-slate-900 border-slate-800'}`}>
-            {links.map(([label, href]) => (
-              <Link key={href} href={href} onClick={() => setShowMenu(false)}
-                className={`block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${isStudy ? 'text-slate-600 hover:bg-slate-100' : 'text-slate-300 hover:bg-white/10'}`}>
-                {label}
-              </Link>
-            ))}
-          </div>
-        )}
       </nav>
-    </>
-  )
-}
 
-function NavLink({ href, label, mode }: { href: string; label: string; mode: string }) {
-  const isStudy = mode === 'study'
-  return (
-    <Link href={href} className={`px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${isStudy ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`}>
-      {label}
-    </Link>
+      {/* ── BOTTOM NAV (mobile only) ── */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center justify-around px-2 py-2 pb-safe">
+          {links.map(({ label, href, icon: Icon }) => {
+            const active = isActive(href)
+            return (
+              <Link key={href} href={href}
+                className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all duration-200 min-w-[56px]"
+                style={active ? { backgroundColor: isStudy ? '#EFF6FF' : '#F5F3FF' } : {}}>
+                <div className={`w-6 h-6 flex items-center justify-center transition-all duration-200 ${active ? 'scale-110' : ''}`}>
+                  <Icon size={20}
+                    style={{ color: active ? (isStudy ? '#2563EB' : funAccent) : '#94A3B8' }}
+                    strokeWidth={active ? 2.5 : 1.8} />
+                </div>
+                <span className="text-[10px] font-semibold transition-all duration-200"
+                  style={{ color: active ? (isStudy ? '#2563EB' : funAccent) : '#94A3B8' }}>
+                  {label}
+                </span>
+                {active && (
+                  <div className="w-1 h-1 rounded-full mt-0.5"
+                    style={{ backgroundColor: isStudy ? '#2563EB' : funAccent }} />
+                )}
+              </Link>
+            )
+          })}
+          {/* Profile tab */}
+          <Link href="/profile"
+            className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all duration-200 min-w-[56px]"
+            style={pathname === '/profile' ? { backgroundColor: isStudy ? '#EFF6FF' : '#F5F3FF' } : {}}>
+            <div className="w-6 h-6 flex items-center justify-center">
+              {user?.avatar
+                ? <img src={user.avatar} alt="me" className="w-5 h-5 rounded-full border border-slate-200" />
+                : <UserCircle size={20} color={pathname === '/profile' ? (isStudy ? '#2563EB' : funAccent) : '#94A3B8'} strokeWidth={1.8} />
+              }
+            </div>
+            <span className="text-[10px] font-semibold"
+              style={{ color: pathname === '/profile' ? (isStudy ? '#2563EB' : funAccent) : '#94A3B8' }}>
+              Profile
+            </span>
+            {pathname === '/profile' && (
+              <div className="w-1 h-1 rounded-full mt-0.5"
+                style={{ backgroundColor: isStudy ? '#2563EB' : funAccent }} />
+            )}
+          </Link>
+        </div>
+      </div>
+    </>
   )
 }
