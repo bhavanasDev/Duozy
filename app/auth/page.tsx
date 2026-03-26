@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useApp } from '@/lib/context'
 import { DEMO_USER } from '@/lib/data'
@@ -13,6 +13,8 @@ function AuthForm() {
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', password: '' })
+
+  const fillDemo = () => setForm(f => ({ ...f, email: 'arjun9@duozy.com', password: 'password123' }))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -93,6 +95,22 @@ function AuthForm() {
             <span className="text-sm text-slate-400">or</span>
             <div className="flex-1 h-px bg-slate-200" />
           </div>
+
+          {/* Demo credentials banner — login tab only */}
+          {tab === 'login' && (
+            <div className="flex items-center justify-between gap-3 px-4 py-3 mb-4 bg-amber-50 border border-amber-200 rounded-2xl">
+              <div>
+                <p className="text-xs font-bold text-amber-800">🔑 Demo credentials</p>
+                <p className="text-xs text-amber-700 mt-0.5">
+                  <span className="font-mono">arjun9@duozy.com</span> · <span className="font-mono">password123</span>
+                </p>
+              </div>
+              <button type="button" onClick={fillDemo}
+                className="shrink-0 text-xs font-bold px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors">
+                Use
+              </button>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {tab === 'signup' && (

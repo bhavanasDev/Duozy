@@ -7,7 +7,7 @@ import { MapPin, Calendar, Users, TrendingUp, Search, Heart, X, Clock, Star } fr
 const CATEGORIES = ['All', 'Art & Craft', 'Music', 'Travel', 'Wellness', 'Photography']
 
 export default function HobbyEventsPage() {
-  const { mode } = useApp()
+  const { mode, completeTask } = useApp()
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
   const [liked, setLiked] = useState<string[]>([])
@@ -19,7 +19,23 @@ export default function HobbyEventsPage() {
     .filter(e => category === 'All' || e.category === category)
     .filter(e => e.title.toLowerCase().includes(search.toLowerCase()))
 
-  const toggleLike = (id: string, e: React.MouseEvent) => { e.stopPropagation(); setLiked(l => l.includes(id) ? l.filter(x => x !== id) : [...l, id]) }
+  const toggleLike = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setLiked(l => {
+      if (l.includes(id)) return l.filter(x => x !== id)
+      const newLiked = [...l, id]
+      if (newLiked.length >= 5) completeTask('b7t3') // Like 5 hobby events
+      return newLiked
+    })
+  }
+
+  function handleRegister(eventId: string) {
+    if (registered.includes(eventId)) return
+    setRegistered(r => [...r, eventId])
+    completeTask('b7t1') // Register for a hobby event
+    setRegisterOpen(false)
+    setSelectedEvent(null)
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -114,14 +130,14 @@ export default function HobbyEventsPage() {
                         style={{ width: `${((selectedEvent.spots - selectedEvent.spotsLeft) / selectedEvent.spots) * 100}%` }} />
                     </div>
                   </div>
-                  <button onClick={() => registered.includes(selectedEvent.id) ? null : setRegisterOpen(true)}
+                  <button onClick={() => !registered.includes(selectedEvent.id) && setRegisterOpen(true)}
                     className={`w-full py-3 rounded-xl font-bold text-sm transition-all hover:scale-[1.02] ${registered.includes(selectedEvent.id) ? 'bg-green-500 text-white cursor-default' : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-lg'}`}>
                     {registered.includes(selectedEvent.id) ? '✓ Registered!' : 'Register Now →'}
                   </button>
                 </>
               ) : (
                 <HobbyRegisterForm event={selectedEvent}
-                  onSubmit={() => { setRegistered(r => [...r, selectedEvent.id]); setRegisterOpen(false); setSelectedEvent(null) }}
+                  onSubmit={() => handleRegister(selectedEvent.id)}
                   onCancel={() => setRegisterOpen(false)} />
               )}
             </div>

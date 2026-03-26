@@ -5,14 +5,21 @@ import { SOCIAL_GROUPS } from '@/lib/data'
 import { Users, Check, Clock, Search, Plus } from 'lucide-react'
 
 export default function GroupsPage() {
-  const { mode } = useApp()
+  const { mode, completeTask } = useApp()
   const [groups, setGroups] = useState(SOCIAL_GROUPS)
   const [search, setSearch] = useState('')
 
-  const handleJoin = (id: string) => {
-    setGroups(gs => gs.map(g => g.id === id ? { ...g, pending: true } : g))
+  function handleJoin(id: string) {
+    setGroups(gs => {
+      const updated = gs.map(g => g.id === id ? { ...g, pending: true } : g)
+      const joinedCount = updated.filter(g => g.joined || g.pending).length
+      completeTask('b5t1') // Join 1 social group
+      if (joinedCount >= 2) completeTask('b5t2') // Join 2 social groups
+      return updated
+    })
   }
-  const handleLeave = (id: string) => {
+
+  function handleLeave(id: string) {
     setGroups(gs => gs.map(g => g.id === id ? { ...g, joined: false, pending: false } : g))
   }
 

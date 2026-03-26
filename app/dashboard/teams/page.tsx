@@ -5,13 +5,27 @@ import { TEAMS } from '@/lib/data'
 import { Users, Plus, Check, X, Star, Briefcase, ChevronRight } from 'lucide-react'
 
 export default function TeamsPage() {
-  const { mode } = useApp()
+  const { mode, completeTask } = useApp()
   const isStudy = mode === 'study'
   const [requests, setRequests] = useState<Record<string, 'pending' | 'accepted' | null>>({})
   const [showCreate, setShowCreate] = useState(false)
 
-  const sendRequest = (id: string) => setRequests(r => ({ ...r, [id]: 'pending' }))
-  const cancelRequest = (id: string) => setRequests(r => ({ ...r, [id]: null }))
+  function sendRequest(id: string) {
+    setRequests(r => ({ ...r, [id]: 'pending' }))
+    const newRequests = { ...requests, [id]: 'pending' }
+    const sentCount = Object.values(newRequests).filter(v => v === 'pending').length
+    completeTask('b2t2') // fires on first request, idempotent after
+    if (sentCount >= 2) completeTask('b2t2') // already idempotent, just ensures 2nd fires
+  }
+
+  function cancelRequest(id: string) {
+    setRequests(r => ({ ...r, [id]: null }))
+  }
+
+  function handleCreateTeam() {
+    setShowCreate(false)
+    completeTask('b2t1') // Join or create a team
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -109,7 +123,7 @@ export default function TeamsPage() {
                       <X size={12} /> Cancel
                     </button>
                   ) : (
-                    <button onClick={() => sendRequest(team.id)}
+              <button onClick={() => sendRequest(team.id)}
                       className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all hover:scale-105 ${isStudy ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'}`}>
                       <ChevronRight size={12} /> Request to Join
                     </button>
@@ -148,7 +162,7 @@ export default function TeamsPage() {
                     className={`w-full px-4 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 ${isStudy ? 'border-slate-200 bg-slate-50 text-slate-800 focus:ring-blue-300' : 'border-slate-600 bg-slate-700 text-white placeholder-slate-400 focus:ring-purple-500'}`} />
                 </div>
               ))}
-              <button onClick={() => setShowCreate(false)}
+              <button onClick={handleCreateTeam}
                 className={`w-full py-3 rounded-xl font-bold text-sm transition-all hover:scale-[1.02] ${isStudy ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'}`}>
                 <Check size={16} className="inline mr-2" />Create Team
               </button>

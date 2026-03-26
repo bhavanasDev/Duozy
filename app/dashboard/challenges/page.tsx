@@ -1,8 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useApp } from '@/lib/context'
 import { BADGE_CHALLENGES, DEMO_USER } from '@/lib/data'
-import { Trophy, Star, Zap, Lock, CheckCircle2, Circle, Gift, X, Check, ChevronRight } from 'lucide-react'
+import { Trophy, Star, Zap, Lock, CheckCircle2, Circle, Gift, X, Check, ChevronRight, Code2 } from 'lucide-react'
+import { Difficulty, Domain, UserSkillStats, SkillBadge } from '@/types/hiring'
+import { PROBLEMS } from '@/lib/hiringData'
+import { loadStats, processSubmission } from '@/lib/hiringStore'
+import ProblemCard from '@/components/hiring/ProblemCard'
+import SkillDashboard from '@/components/hiring/SkillDashboard'
 
 const REDEEM_OPTIONS = [
   {
@@ -62,18 +67,47 @@ const REDEEM_OPTIONS = [
 ]
 
 export default function ChallengesPage() {
-  const { mode, user, setUser } = useApp()
+  const { mode, user, completedTasks, points, completeTask } = useApp()
   const isStudy = mode === 'study'
   const u = user || DEMO_USER
-  const [tab, setTab] = useState<'challenges' | 'redeem'>('challenges')
+  const [tab, setTab] = useState<'challenges' | 'redeem' | 'hiring'>('challenges')
+
+  // Hiring state
+  const userId = u.id ?? 'demo-user'
+  const [hiringStats, setHiringStats] = useState<UserSkillStats>(() => loadStats(userId))
+  const [hiringTab, setHiringTab] = useState<'problems' | 'dashboard'>('problems')
+  const [difficulty, setDifficulty] = useState<Difficulty>('basic')
+  const [domain, setDomain] = useState<Domain | 'all'>('all')
+  const [solvedIds, setSolvedIds] = useState<Set<string>>(new Set())
+  const [badgeToast, setBadgeToast] = useState<SkillBadge | null>(null)
+
+  useEffect(() => { setHiringStats(loadStats(userId)) }, [userId])
+
+  function handleProblemSubmit(problemId: string, correct: boolean, timeTaken: number) {
+    if (solvedIds.has(problemId)) return
+    if (correct) setSolvedIds(prev => new Set(prev).add(problemId))
+    const { stats: updated, newBadge } = processSubmission(
+      hiringStats,
+      { problemId, userId, correct, timeTaken, submittedAt: Date.now() },
+      difficulty,
+    )
+    setHiringStats(updated)
+    if (newBadge) {
+      setBadgeToast(newBadge)
+      setTimeout(() => setBadgeToast(null), 4000)
+    }
+  }
+
+  const visibleProblems = PROBLEMS.filter(p =>
+    p.difficulty === difficulty && (domain === 'all' || p.domain === domain)
+  )
+
+  const DOMAINS: Domain[] = ['DSA', 'Web', 'System Design', 'Database']
+  const DIFFICULTIES: Difficulty[] = ['basic', 'intermediate', 'advanced']
   const [challengeTab, setChallengeTab] = useState<'study' | 'fun'>(isStudy ? 'study' : 'fun')
-  const [points, setPoints] = useState(u.points)
   const [redeemed, setRedeemed] = useState<string[]>([])
   const [confirmItem, setConfirmItem] = useState<typeof REDEEM_OPTIONS[0] | null>(null)
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
-  const [completedTasks, setCompletedTasks] = useState<string[]>(
-    BADGE_CHALLENGES.flatMap(b => b.tasks.filter(t => t.completed).map(t => t.id))
-  )
 
   const badgeGroups = BADGE_CHALLENGES.filter(b => b.category === challengeTab)
   const totalEarned = BADGE_CHALLENGES.flatMap(b => b.tasks)
@@ -86,10 +120,9 @@ export default function ChallengesPage() {
     setTimeout(() => setToast(null), 3000)
   }
 
-  const completeTask = (taskId: string, pts: number) => {
+  const handleCompleteTask = (taskId: string, pts: number) => {
     if (completedTasks.includes(taskId)) return
-    setCompletedTasks(prev => [...prev, taskId])
-    setPoints(p => p + pts)
+    completeTask(taskId)
     showToast(`+${pts} points earned! 🎉`, 'success')
   }
 
@@ -103,7 +136,6 @@ export default function ChallengesPage() {
 
   const confirmRedeem = () => {
     if (!confirmItem) return
-    setPoints(p => p - confirmItem.cost)
     setRedeemed(r => [...r, confirmItem.id])
     setConfirmItem(null)
     showToast(`${confirmItem.title} activated! ✨`, 'success')
@@ -186,6 +218,7 @@ export default function ChallengesPage() {
         {[
           { id: 'challenges', label: '🎯 Challenges', desc: 'Earn points' },
           { id: 'redeem', label: '🎁 Redeem', desc: 'Use points' },
+          { id: 'hiring', label: '💼 Skill Hiring', desc: 'Get noticed' },
         ].map(t => (
           <button key={t.id} onClick={() => setTab(t.id as any)}
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${tab === t.id ? s.tabActive : `${s.muted} hover:${s.text}`}`}>
@@ -263,7 +296,7 @@ export default function ChallengesPage() {
                       const done = completedTasks.includes(task.id)
                       return (
                         <div key={task.id}
-                          onClick={() => !done && completeTask(task.id, task.points)}
+                          onClick={() => !done && handleCompleteTask(task.id, task.points)}
                           className={`flex items-center gap-3 p-2.5 rounded-xl transition-all ${
                             done
                               ? isStudy ? 'bg-green-50 border border-green-100' : 'bg-green-900/20 border border-green-700/20'
@@ -389,6 +422,83 @@ export default function ChallengesPage() {
               )
             })}
           </div>
+        </div>
+      )}
+
+      {/* HIRING TAB */}
+      {tab === 'hiring' && (
+        <div className="space-y-4">
+          {/* Sub-tabs */}
+          <div className={`flex gap-1 p-1 rounded-xl w-fit ${s.tabBg}`}>
+            {([['problems', <Code2 size={14} />, 'Problems'], ['dashboard', <Trophy size={14} />, 'My Progress']] as const).map(
+              ([key, icon, label]) => (
+                <button
+                  key={key}
+                  onClick={() => setHiringTab(key)}
+                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${hiringTab === key ? s.tabActive : s.muted}`}
+                >
+                  {icon}{label}
+                </button>
+              )
+            )}
+          </div>
+
+          {hiringTab === 'problems' && (
+            <>
+              {/* Filters */}
+              <div className="flex flex-wrap gap-2">
+                <div className={`flex gap-1 p-1 rounded-lg ${s.tabBg}`}>
+                  {DIFFICULTIES.map(d => (
+                    <button
+                      key={d}
+                      onClick={() => setDifficulty(d)}
+                      className={`px-3 py-1 rounded-md text-xs font-bold capitalize transition-all ${difficulty === d ? s.tabActive : s.muted}`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+                <select
+                  value={domain}
+                  onChange={e => setDomain(e.target.value as Domain | 'all')}
+                  className={`border rounded-lg px-3 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-blue-300 ${isStudy ? 'border-slate-200 bg-white text-slate-700' : 'border-slate-600 bg-slate-800 text-slate-300'}`}
+                >
+                  <option value="all">All Domains</option>
+                  {DOMAINS.map(d => <option key={d}>{d}</option>)}
+                </select>
+              </div>
+
+              {/* Problems */}
+              <div className="space-y-3">
+                {visibleProblems.length === 0 ? (
+                  <p className={`text-sm text-center py-8 ${s.muted}`}>No problems found for this filter.</p>
+                ) : (
+                  visibleProblems.map(p => (
+                    <ProblemCard
+                      key={p.id}
+                      problem={p}
+                      disabled={solvedIds.has(p.id)}
+                      onSubmit={(correct, time) => handleProblemSubmit(p.id, correct, time)}
+                    />
+                  ))
+                )}
+              </div>
+            </>
+          )}
+
+          {hiringTab === 'dashboard' && <SkillDashboard stats={hiringStats} />}
+
+          {/* Badge Toast */}
+          {badgeToast && (
+            <div className="fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white border border-yellow-300 shadow-lg rounded-2xl px-5 py-3 flex items-center gap-3 animate-bounce">
+              <span className="text-2xl">🏅</span>
+              <div>
+                <p className="font-bold text-slate-800 text-sm">Skill Badge Unlocked!</p>
+                <p className="text-xs text-slate-500">{badgeToast.label}</p>
+              </div>
+              <button onClick={() => setBadgeToast(null)} className="text-slate-400 hover:text-slate-600 ml-2"><X size={14} /></button>
+            </div>
+          )}
         </div>
       )}
 

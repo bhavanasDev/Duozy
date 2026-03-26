@@ -110,7 +110,7 @@ body {
 }
 
 .animate-float { animation: float 6s ease-in-out infinite; }
-.animate-slide-up { animation: slideUp 0.4s ease-out; }
+.animate-slide-up { animation: slideUp 0.4s ease-out both; }
 .animate-bounce-soft { animation: bounceSoft 2s ease-in-out infinite; }
 .animate-fade-in-scale { animation: fadeInScale 0.4s ease-out; }
 .animate-slide-in-left { animation: slideInLeft 0.4s ease-out; }
@@ -137,4 +137,55 @@ body {
 
 .progress-fill {
   transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── LEAFLET MAP CUSTOMIZATIONS ── */
+.leaflet-container {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+  border: none !important;
+}
+
+.leaflet-popup-tip {
+  box-shadow: none !important;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.leaflet-control-zoom a {
+  border: none !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  border-radius: 6px !important;
+  margin: 2px !important;
+}
+
+.leaflet-control-zoom a:first-child {
+  border-radius: 6px 6px 0 0 !important;
+}
+
+.leaflet-control-zoom a:last-child {
+  border-radius: 0 0 6px 6px !important;
+}
+
+.leaflet-popup-close-button {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  padding: 8px !important;
+  color: #64748b !important;
+}
+
+.leaflet-popup-close-button:hover {
+  color: #1e293b !important;
+  background: rgba(0,0,0,0.05) !important;
+  border-radius: 4px !important;
 }
