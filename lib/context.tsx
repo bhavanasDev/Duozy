@@ -1,5 +1,8 @@
 'use client'
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { UserSkillStats } from '@/types/hiring'
+import { loadStats } from '@/lib/hiringStore'
+import { BADGE_CHALLENGES, DEMO_USER } from '@/lib/data'
 
 export type Mode = 'study' | 'fun'
 
@@ -27,6 +30,12 @@ interface AppContextType {
   unreadCount: number
   markAllRead: () => void
   isTransitioning: boolean
+  hiringStats: UserSkillStats | null
+  refreshHiringStats: () => void
+  // Challenge system
+  completedTasks: string[]
+  points: number
+  completeTask: (taskId: string) => void
 }
 
 interface Notification {
@@ -53,6 +62,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [notifications, setNotifications] = useState<Notification[]>(DEMO_NOTIFICATIONS)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [hiringStats, setHiringStats] = useState<UserSkillStats | null>(null)
+  const [completedTasks, setCompletedTasks] = useState<string[]>(
+    BADGE_CHALLENGES.flatMap(b => b.tasks.filter(t => t.completed).map(t => t.id))
+  )
+  const [points, setPoints] = useState(DEMO_USER.points)
+
+  useEffect(() => {
+    if (user) setHiringStats(loadStats(user.id))
+  }, [user])
+
+  function refreshHiringStats() {
+    if (user) setHiringStats(loadStats(user.id))
+  }
+
+  function completeTask(taskId: string) {
+    if (completedTasks.includes(taskId)) return
+    const task = BADGE_CHALLENGES.flatMap(b => b.tasks).find(t => t.id === taskId)
+    if (!task) return
+    setCompletedTasks(prev => [...prev, taskId])
+    setPoints(p => p + task.points)
+  }
 
   const setMode = (m: Mode) => {
     setIsTransitioning(true)
@@ -75,6 +105,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       isLoggedIn: !!user,
       notifications, unreadCount, markAllRead,
       isTransitioning,
+      hiringStats, refreshHiringStats,
+      completedTasks, points, completeTask,
     }}>
       {children}
     </AppContext.Provider>

@@ -9,7 +9,7 @@ const TYPES = ['All', 'online', 'offline']
 const SORTS = ['Trending', 'Newest', 'Deadline']
 
 export default function EventsPage() {
-  const { mode } = useApp()
+  const { mode, completeTask } = useApp()
   const isStudy = mode === 'study'
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
@@ -26,7 +26,23 @@ export default function EventsPage() {
     .filter(e => e.title.toLowerCase().includes(search.toLowerCase()) || e.tags.some(t => t.toLowerCase().includes(search.toLowerCase())))
     .sort((a, b) => sort === 'Trending' ? (b.trending ? 1 : 0) - (a.trending ? 1 : 0) : sort === 'Deadline' ? a.deadline.localeCompare(b.deadline) : 0)
 
-  const toggleSave = (id: string, e: React.MouseEvent) => { e.stopPropagation(); setSaved(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]) }
+  const toggleSave = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setSaved(s => {
+      if (s.includes(id)) return s.filter(x => x !== id)
+      completeTask('b1t3') // Save an opportunity
+      return [...s, id]
+    })
+  }
+
+  function handleRegister(eventId: string, eventCategory: string) {
+    if (registered.includes(eventId)) return
+    setRegistered(r => [...r, eventId])
+    completeTask('b1t1') // Join your first event
+    if (eventCategory === 'Hackathon') completeTask('b3t1') // Register for a hackathon
+    setRegisterOpen(false)
+    setSelectedEvent(null)
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -101,9 +117,7 @@ export default function EventsPage() {
                   <span key={tag} className={`text-[10px] px-1.5 py-0.5 rounded ${isStudy ? 'bg-slate-100 text-slate-500' : 'bg-slate-700 text-slate-400'}`}>{tag}</span>
                 ))}
               </div>
-              <div className={`w-full py-2 rounded-lg text-xs font-bold text-center transition-all ${
-                registered.includes(event.id) ? 'bg-green-500 text-white' : isStudy ? 'bg-blue-600 text-white' : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
-              }`}>
+              <div className={`w-full py-2 rounded-lg text-xs font-bold text-center transition-all ${registered.includes(event.id) ? 'bg-green-500 text-white' : isStudy ? 'bg-blue-600 text-white' : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'}`}>
                 {registered.includes(event.id) ? '✓ Registered' : 'View & Register →'}
               </div>
             </div>
@@ -137,8 +151,8 @@ export default function EventsPage() {
                       { icon: <MapPin size={12} className="text-blue-400" />, label: 'Location', val: selectedEvent.location },
                       { icon: <Users size={12} className="text-green-400" />, label: 'Participants', val: `${selectedEvent.participants?.toLocaleString()} joined` },
                       { icon: <Trophy size={12} className="text-amber-400" />, label: 'Prize', val: selectedEvent.prize },
-                      { icon: <Briefcase size={12} className="text-purple-400" />, label: 'Organizer', val: (selectedEvent as any).organizer },
-                      { icon: <Users size={12} className="text-pink-400" />, label: 'Team Size', val: (selectedEvent as any).teamSize },
+                      { icon: <Briefcase size={12} className="text-purple-400" />, label: 'Organizer', val: selectedEvent.organizer },
+                      { icon: <Users size={12} className="text-pink-400" />, label: 'Team Size', val: selectedEvent.teamSize },
                     ].map((item, i) => (
                       <div key={i} className={`px-3 py-2 rounded-xl text-xs ${isStudy ? 'bg-slate-50' : 'bg-slate-700/50'}`}>
                         <div className={`flex items-center gap-1 mb-0.5 ${isStudy ? 'text-slate-400' : 'text-slate-500'}`}>{item.icon}{item.label}</div>
@@ -151,16 +165,14 @@ export default function EventsPage() {
                       <span key={tag} className={`text-xs px-2 py-0.5 rounded-md ${isStudy ? 'bg-blue-50 text-blue-600' : 'bg-purple-900/50 text-purple-300'}`}>{tag}</span>
                     ))}
                   </div>
-                  <button onClick={() => registered.includes(selectedEvent.id) ? null : setRegisterOpen(true)}
-                    className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.02] ${
-                      registered.includes(selectedEvent.id) ? 'bg-green-500 text-white cursor-default' : isStudy ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
-                    }`}>
+                  <button onClick={() => !registered.includes(selectedEvent.id) && setRegisterOpen(true)}
+                    className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.02] ${registered.includes(selectedEvent.id) ? 'bg-green-500 text-white cursor-default' : isStudy ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'}`}>
                     {registered.includes(selectedEvent.id) ? '✓ Already Registered' : <><ExternalLink size={16} /> Register Now</>}
                   </button>
                 </>
               ) : (
                 <RegisterForm event={selectedEvent} isStudy={isStudy}
-                  onSubmit={() => { setRegistered(r => [...r, selectedEvent.id]); setRegisterOpen(false); setSelectedEvent(null) }}
+                  onSubmit={() => handleRegister(selectedEvent.id, selectedEvent.category)}
                   onCancel={() => setRegisterOpen(false)} />
               )}
             </div>

@@ -68,15 +68,24 @@ export const STUDY_EVENTS = [
   },
 ]
 
+// All opportunities are Hyderabad-specific
 export const OPPORTUNITIES = [
-  { id: '1', title: 'SDE Intern – Google', type: 'hiring', lat: 12.9716, lng: 77.5946, location: 'Bangalore', company: 'Google', stipend: '₹80,000/mo', deadline: '2025-04-30', tags: ['React', 'Python', 'DSA'] },
-  { id: '2', title: 'Frontend Dev – Swiggy', type: 'hiring', lat: 12.9352, lng: 77.6245, location: 'Bangalore', company: 'Swiggy', stipend: '₹60,000/mo', deadline: '2025-04-25', tags: ['React', 'TypeScript'] },
-  { id: '3', title: 'Smart India Hackathon', type: 'hackathon', lat: 28.6139, lng: 77.2090, location: 'Delhi', company: 'Govt of India', stipend: '₹1,00,000', deadline: '2025-04-15', tags: ['AI', 'Web', 'Mobile'] },
-  { id: '4', title: 'GATE 2025 Exam', type: 'exam', lat: 19.0760, lng: 72.8777, location: 'Mumbai', company: 'IIT Bombay', stipend: 'Scholarship', deadline: '2025-05-05', tags: ['Engineering', 'PG Admission'] },
-  { id: '5', title: 'ML Engineer – Zepto', type: 'hiring', lat: 18.5204, lng: 73.8567, location: 'Pune', company: 'Zepto', stipend: '₹70,000/mo', deadline: '2025-04-28', tags: ['Python', 'ML', 'TensorFlow'] },
-  { id: '6', title: 'HackCBS 7.0', type: 'hackathon', lat: 28.7041, lng: 77.1025, location: 'Delhi', company: 'SSCBS', stipend: '₹50,000', deadline: '2025-04-20', tags: ['FinTech', 'Blockchain'] },
-  { id: '7', title: 'CAT 2025', type: 'exam', lat: 22.5726, lng: 88.3639, location: 'Kolkata', company: 'IIM', stipend: 'MBA Admission', deadline: '2025-11-30', tags: ['MBA', 'Management'] },
-  { id: '8', title: 'Backend Dev – Razorpay', type: 'hiring', lat: 12.9716, lng: 77.5946, location: 'Bangalore', company: 'Razorpay', stipend: '₹75,000/mo', deadline: '2025-05-01', tags: ['Node.js', 'Go', 'AWS'] },
+  // ── Hackathons ──
+  { id: '1',  title: 'HydHack 2025',              type: 'hackathon',  location: 'HITEC City',      company: 'T-Hub',           stipend: '₹1,00,000',  deadline: '2025-05-10', tags: ['AI', 'Web', 'IoT'] },
+  { id: '2',  title: 'FinTech Hackathon',          type: 'hackathon',  location: 'Gachibowli',      company: 'ICICI Bank',      stipend: '₹75,000',    deadline: '2025-05-18', tags: ['FinTech', 'Blockchain', 'UPI'] },
+  { id: '3',  title: 'Smart City Hack',            type: 'hackathon',  location: 'Banjara Hills',   company: 'GHMC',            stipend: '₹50,000',    deadline: '2025-06-01', tags: ['IoT', 'Civic Tech'] },
+  // ── Exams ──
+  { id: '4',  title: 'GATE 2026 – CSE',            type: 'exam',       location: 'Kukatpally',      company: 'IIT Hyderabad',   stipend: 'PG Admission', deadline: '2026-02-01', tags: ['CSE', 'Engineering', 'PG'] },
+  { id: '5',  title: 'TSPSC Group-I 2025',         type: 'exam',       location: 'Secunderabad',    company: 'TSPSC',           stipend: 'Govt Job',   deadline: '2025-07-15', tags: ['Civil Services', 'Telangana'] },
+  { id: '6',  title: 'ICAI CA Final – Nov 2025',   type: 'exam',       location: 'Charminar',       company: 'ICAI',            stipend: 'CA Licence', deadline: '2025-10-31', tags: ['Finance', 'Accounting', 'CA'] },
+  // ── Internships ──
+  { id: '7',  title: 'SDE Intern – Microsoft',     type: 'internship', location: 'HITEC City',      company: 'Microsoft',       stipend: '₹80,000/mo', deadline: '2025-05-20', tags: ['React', 'Azure', 'TypeScript'] },
+  { id: '8',  title: 'Data Science Intern – TCS',  type: 'internship', location: 'Madhapur',        company: 'TCS',             stipend: '₹25,000/mo', deadline: '2025-05-30', tags: ['Python', 'ML', 'SQL'] },
+  { id: '9',  title: 'UI/UX Intern – Wipro',       type: 'internship', location: 'Gachibowli',      company: 'Wipro',           stipend: '₹20,000/mo', deadline: '2025-06-10', tags: ['Figma', 'Design', 'UX'] },
+  // ── Jobs ──
+  { id: '10', title: 'SDE-2 – Amazon',             type: 'job',        location: 'Nanakramguda',    company: 'Amazon',          stipend: '₹28 LPA',    deadline: '2025-05-25', tags: ['Java', 'AWS', 'DSA'] },
+  { id: '11', title: 'Backend Engineer – Juspay',  type: 'job',        location: 'Banjara Hills',   company: 'Juspay',          stipend: '₹22 LPA',    deadline: '2025-06-05', tags: ['Haskell', 'Node.js', 'Payments'] },
+  { id: '12', title: 'ML Engineer – Infoedge',     type: 'job',        location: 'Secunderabad',    company: 'Infoedge',        stipend: '₹18 LPA',    deadline: '2025-06-15', tags: ['Python', 'TensorFlow', 'NLP'] },
 ]
 
 export const TEAMS = [

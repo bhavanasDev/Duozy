@@ -83,47 +83,73 @@ export default function DashboardPage() {
 
         {/* 40% panel */}
         {isStudy ? (
-        <div className="hidden lg:block lg:col-span-2 relative rounded-3xl overflow-hidden border border-slate-200 bg-blue-50 min-h-[200px]">
-            <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-sm">
+        <div className="hidden lg:block lg:col-span-2 relative rounded-3xl overflow-hidden border border-slate-200 bg-slate-100 min-h-[200px]">
+            <div className="absolute top-3 left-3 z-10 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-sm">
               <p className="text-xs font-bold text-slate-700">🗺️ Opportunity Map</p>
-              <p className="text-[10px] text-slate-400">{OPPORTUNITIES.length} near you</p>
+              <p className="text-[10px] text-slate-400">{OPPORTUNITIES.length} near you · Hyderabad</p>
             </div>
-            <Link href="/dashboard/map" className="absolute top-3 right-3 z-10 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-blue-700 transition-colors">
+            <Link href="/dashboard/map" className="absolute top-3 right-3 z-10 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-blue-700 transition-colors shadow-sm">
               Full Map →
             </Link>
-            <svg className="absolute inset-0 w-full h-full opacity-20"><defs><pattern id="mgrid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke="#93C5FD" strokeWidth="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#mgrid)" /></svg>
-            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-              <svg viewBox="0 0 400 500" className="w-40 h-40" fill="#2563EB">
-                <path d="M200,50 C220,45 260,60 280,80 C300,100 310,130 305,160 C300,190 290,210 300,240 C310,270 320,290 310,320 C300,350 280,370 260,380 C240,390 220,395 200,400 C180,395 160,390 140,380 C120,370 100,350 90,320 C80,290 90,270 100,240 C110,210 100,190 95,160 C90,130 100,100 120,80 C140,60 180,45 200,50Z" />
-              </svg>
-            </div>
-            {OPPORTUNITIES.slice(0, 6).map(opp => {
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-slate-100 to-blue-100" />
+            <svg className="absolute inset-0 w-full h-full opacity-30">
+              <defs><pattern id="mgrid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M 24 0 L 0 0 0 24" fill="none" stroke="#93C5FD" strokeWidth="0.8"/></pattern></defs>
+              <rect width="100%" height="100%" fill="url(#mgrid)" />
+            </svg>
+            <svg className="absolute inset-0 w-full h-full opacity-20">
+              <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#3B82F6" strokeWidth="2" strokeDasharray="8,4"/>
+              <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#3B82F6" strokeWidth="2" strokeDasharray="8,4"/>
+              <line x1="20%" y1="0" x2="80%" y2="100%" stroke="#93C5FD" strokeWidth="1.5" strokeDasharray="6,4"/>
+              <line x1="80%" y1="0" x2="20%" y2="100%" stroke="#93C5FD" strokeWidth="1.5" strokeDasharray="6,4"/>
+            </svg>
+            {OPPORTUNITIES.slice(0, 8).map(opp => {
               const pos = PIN_POS[opp.id]
               if (!pos) return null
-              const color = TYPE_COLORS[opp.type]
+              const color = TYPE_COLORS[opp.type] ?? '#64748B'
               return (
                 <button key={opp.id} onClick={() => setSelectedPin(selectedPin === opp.id ? null : opp.id)}
                   className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10"
                   style={{ top: pos.top, left: pos.left }}>
-                  <div className={`relative w-7 h-7 rounded-full border-2 border-white shadow-md flex items-center justify-center text-xs transition-all hover:scale-125 ${selectedPin === opp.id ? 'scale-125' : ''}`}
+                  <div className={`relative w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-sm transition-all hover:scale-125 ${selectedPin === opp.id ? 'scale-125' : ''}`}
                     style={{ backgroundColor: color }}>
                     <span>{TYPE_LABELS[opp.type]}</span>
-                    <div className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ backgroundColor: color }} />
+                    {selectedPin !== opp.id && (
+                      <div className="absolute inset-0 rounded-full animate-ping opacity-25" style={{ backgroundColor: color }} />
+                    )}
                   </div>
                 </button>
               )
             })}
-            {selectedOpp && (
+            {selectedOpp ? (
               <div className="absolute bottom-3 left-3 right-3 bg-white rounded-2xl shadow-xl p-3 z-20 border border-slate-100">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-xs text-slate-900 truncate">{selectedOpp.title}</p>
-                    <p className="text-[10px] text-blue-600">{selectedOpp.company} · {selectedOpp.location}</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Deadline: {selectedOpp.deadline}</p>
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="text-xs">{TYPE_LABELS[selectedOpp.type]}</span>
+                      <p className="font-bold text-xs text-slate-900 truncate">{selectedOpp.title}</p>
+                    </div>
+                    <p className="text-[10px] text-blue-600 font-medium">{selectedOpp.company} · {selectedOpp.location}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <p className="text-[10px] text-slate-400">⏰ {selectedOpp.deadline}</p>
+                      <p className="text-[10px] text-green-600 font-semibold">💰 {selectedOpp.stipend}</p>
+                    </div>
                   </div>
-                  <button onClick={() => setSelectedPin(null)} className="text-slate-400 hover:text-slate-600 shrink-0"><X size={12} /></button>
+                  <button onClick={() => setSelectedPin(null)} className="text-slate-400 hover:text-slate-600 shrink-0 p-0.5"><X size={12} /></button>
                 </div>
-                <Link href="/dashboard/map" className="mt-2 block text-center text-[10px] font-bold text-blue-600 hover:underline">View Details →</Link>
+                <Link href="/dashboard/map" className="mt-2 flex items-center justify-center gap-1 text-[10px] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg py-1.5 transition-colors">
+                  View on Full Map →
+                </Link>
+              </div>
+            ) : (
+              <div className="absolute bottom-3 left-3 right-3 z-10">
+                <div className="flex gap-1.5 flex-wrap">
+                  {Object.entries(TYPE_COLORS).map(([type, color]) => (
+                    <div key={type} className="flex items-center gap-1 px-2 py-1 bg-white/90 rounded-lg shadow-sm">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                      <span className="text-[9px] font-semibold text-slate-600 capitalize">{type}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
         </div>
@@ -131,7 +157,7 @@ export default function DashboardPage() {
           <div className="hidden lg:block lg:col-span-2 relative rounded-3xl overflow-hidden border border-slate-200 min-h-[220px] cursor-pointer group bg-gradient-to-br from-violet-50 to-purple-50"
             onClick={() => window.location.href = '/dashboard/vibe'}>
             <div className="absolute inset-0 opacity-10"
-              style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=60)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
+              style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=60)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
             <div className="relative z-10 p-5 h-full flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -148,7 +174,7 @@ export default function DashboardPage() {
                     </div>
                   ))}
                 </div>
-                <h3 className="text-slate-900 font-black text-lg mb-1">✨ Vibe Mode</h3>
+                <h3 className="text-slate-900 font-black text-lg mb-1">✨ Virtual Experiences</h3>
                 <p className="text-slate-500 text-xs mb-3">Try pottery, resin art, guitar, piano & photography virtually</p>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200">🏺 Pottery</span>

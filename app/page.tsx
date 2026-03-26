@@ -121,7 +121,7 @@ export default function LandingPage() {
                   <div className="ml-auto w-2 h-2 bg-pink-400 rounded-full animate-pulse" />
                 </div>
                 <div className="space-y-2">
-                  {['🎨 Hobby Events & Workshops', '🌍 Vibe Mode – Virtual Travel', '🤝 Social Interest Groups', '✨ Trending Activities'].map(item => (
+                  {['🎨 Hobby Events & Workshops', '✨ Virtual Activity Experiences', '🤝 Social Interest Groups', '🎯 Challenges & Rewards'].map(item => (
                     <div key={item} className="flex items-center gap-2 text-sm text-purple-200 bg-white/10 rounded-lg px-3 py-2">{item}</div>
                   ))}
                 </div>
@@ -147,7 +147,7 @@ export default function LandingPage() {
               { icon: <Map size={24} />, title: 'Opportunity Map', desc: 'Interactive map with color-coded pins for jobs, hackathons, and exams near you.', color: 'blue', bg: 'bg-blue-50', iconBg: 'bg-blue-600' },
               { icon: <Users size={24} />, title: 'Team Builder', desc: 'Find teammates for hackathons with smart skill-matching and request system.', color: 'indigo', bg: 'bg-indigo-50', iconBg: 'bg-indigo-600' },
               { icon: <Trophy size={24} />, title: 'Challenge System', desc: 'Gamified tasks with badges, points, and animated progress tracking.', color: 'amber', bg: 'bg-amber-50', iconBg: 'bg-amber-500' },
-              { icon: <span className="text-2xl">🌍</span>, title: 'Vibe Mode', desc: 'Immersive virtual travel with ambient sounds and fullscreen environments.', color: 'purple', bg: 'bg-purple-50', iconBg: 'bg-purple-600' },
+              { icon: <span className="text-2xl">✨</span>, title: 'Virtual Experiences', desc: 'Interactive simulations — pottery, guitar, piano, resin art & photography.', color: 'purple', bg: 'bg-purple-50', iconBg: 'bg-purple-600' },
               { icon: <span className="text-2xl">🎨</span>, title: 'Hobby Events', desc: 'Discover pottery, music, travel, and art workshops near you.', color: 'pink', bg: 'bg-pink-50', iconBg: 'bg-pink-500' },
               { icon: <span className="text-2xl">🔔</span>, title: 'Smart Notifications', desc: 'Real-time alerts for deadlines, team activity, and trending events.', color: 'green', bg: 'bg-green-50', iconBg: 'bg-green-600' },
             ].map((f, i) => (

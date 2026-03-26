@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useApp } from '@/lib/context'
-import { Zap, Bell, BookOpen, Palette, X, Clock, Users, Trophy, Calendar, LayoutDashboard, Map, Star, Music, Flame, UserCircle } from 'lucide-react'
+import { Zap, Bell, BookOpen, Palette, X, Clock, Users, Trophy, Calendar, LayoutDashboard, Map, Star, Flame, UserCircle } from 'lucide-react'
 
 const notifIcons = { deadline: Clock, team: Users, challenge: Trophy, event: Calendar }
 const notifColors = {
@@ -51,7 +51,6 @@ export default function Navbar() {
     { label: 'Home', href: '/dashboard', icon: LayoutDashboard },
     { label: 'Hobbies', href: '/dashboard/hobby-events', icon: Star },
     { label: 'Groups', href: '/dashboard/groups', icon: Users },
-    { label: 'Vibe', href: '/dashboard/vibe', icon: Music },
     { label: 'Challenges', href: '/dashboard/challenges', icon: Trophy },
   ]
   const links = isStudy ? studyLinks : funLinks
