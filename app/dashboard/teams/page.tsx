@@ -26,14 +26,14 @@ export default function TeamsPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {TEAMS.map(team => {
           const reqState = requests[team.id]
           const fillPct = (team.members / team.maxMembers) * 100
 
           return (
             <div key={team.id}
-              className={`rounded-2xl border p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${isStudy ? 'bg-white border-slate-100' : 'bg-slate-800/70 border-slate-700/50'}`}>
+              className={`rounded-2xl border p-3 sm:p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${isStudy ? 'bg-white border-slate-100' : 'bg-slate-800/70 border-slate-700/50'}`}>
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">

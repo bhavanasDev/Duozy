@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useApp } from '@/lib/context'
-import { DEMO_USER, STUDY_EVENTS, FUN_EVENTS, OPPORTUNITIES } from '@/lib/data'
+import { DEMO_USER, STUDY_EVENTS, FUN_EVENTS, OPPORTUNITIES, CHALLENGES } from '@/lib/data'
 import Link from 'next/link'
 import { ArrowRight, Trophy, BookOpen, Palette, Clock, X, MapPin, Users, Briefcase, ExternalLink } from 'lucide-react'
 
@@ -38,13 +38,13 @@ export default function DashboardPage() {
   const selectedOpp = OPPORTUNITIES.find(o => o.id === selectedPin)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
 
       {/* Welcome banner + Mini Map */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4 mb-5 sm:mb-8">
         {/* Banner 60% */}
-        <div className={`lg:col-span-3 relative rounded-3xl p-7 overflow-hidden transition-all duration-500 ${
-          isStudy ? 'bg-gradient-to-r from-blue-600 to-blue-700' : 'bg-gradient-to-r from-purple-900 via-purple-800 to-pink-900'
+        <div className={`lg:col-span-3 relative rounded-2xl sm:rounded-3xl p-4 sm:p-7 overflow-hidden transition-all duration-500 ${
+          isStudy ? 'bg-gradient-to-r from-blue-600 to-blue-700' : 'bg-gradient-to-r from-violet-600 to-purple-700'
         }`}>
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             {[...Array(3)].map((_, i) => (
@@ -57,13 +57,13 @@ export default function DashboardPage() {
               {isStudy ? <BookOpen size={12} /> : <Palette size={12} />}
               {isStudy ? 'Study Mode Active' : 'Fun Mode Active'}
             </div>
-            <h1 className="text-2xl md:text-3xl font-black text-white mb-2">
+            <h1 className="text-xl sm:text-3xl font-black text-white mb-1 sm:mb-2">
               Hey {u.name.split(' ')[0]}! {isStudy ? '📚' : '🎉'}
             </h1>
-            <p className="text-white/70 text-sm mb-5">
+            <p className="text-white/70 text-xs sm:text-sm mb-3 sm:mb-5">
               {isStudy ? `${u.joinedEvents.length} active events. Keep pushing! 🚀` : `${FUN_EVENTS.filter(e => e.trending).length} trending activities near you. ✨`}
             </p>
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3 sm:gap-5">
               {[
                 { label: 'Points', value: u.points },
                 { label: 'Badges', value: u.badges.length },
@@ -72,7 +72,7 @@ export default function DashboardPage() {
                 <div key={label} className="flex items-center gap-4">
                   {i > 0 && <div className="w-px h-8 bg-white/20" />}
                   <div className="text-center">
-                    <div className="text-2xl font-black text-white">{value}</div>
+                    <div className="text-xl sm:text-2xl font-black text-white">{value}</div>
                     <div className="text-white/60 text-xs">{label}</div>
                   </div>
                 </div>
@@ -83,7 +83,7 @@ export default function DashboardPage() {
 
         {/* 40% panel */}
         {isStudy ? (
-          <div className="lg:col-span-2 relative rounded-3xl overflow-hidden border border-slate-200 bg-blue-50 min-h-[200px]">
+        <div className="hidden lg:block lg:col-span-2 relative rounded-3xl overflow-hidden border border-slate-200 bg-blue-50 min-h-[200px]">
             <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-sm">
               <p className="text-xs font-bold text-slate-700">🗺️ Opportunity Map</p>
               <p className="text-[10px] text-slate-400">{OPPORTUNITIES.length} near you</p>
@@ -126,68 +126,64 @@ export default function DashboardPage() {
                 <Link href="/dashboard/map" className="mt-2 block text-center text-[10px] font-bold text-blue-600 hover:underline">View Details →</Link>
               </div>
             )}
-          </div>
+        </div>
         ) : (
-          <div className="lg:col-span-2 relative rounded-3xl overflow-hidden border border-white/10 min-h-[220px] cursor-pointer group"
+          <div className="hidden lg:block lg:col-span-2 relative rounded-3xl overflow-hidden border border-slate-200 min-h-[220px] cursor-pointer group bg-gradient-to-br from-violet-50 to-purple-50"
             onClick={() => window.location.href = '/dashboard/vibe'}>
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-            <div className="absolute inset-0 opacity-40"
+            <div className="absolute inset-0 opacity-10"
               style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=60)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="relative z-10 p-5 h-full flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-white/60 text-[10px] font-bold uppercase tracking-widest">Live Drive</span>
+                  <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+                  <span className="text-violet-600 text-[10px] font-bold uppercase tracking-widest">Virtual Experience</span>
                 </div>
-                <span className="text-xs text-white/60 bg-white/10 px-2 py-1 rounded-full backdrop-blur-sm">3 cities</span>
+                <span className="text-xs text-violet-500 bg-violet-50 border border-violet-200 px-2 py-1 rounded-full">5 activities</span>
               </div>
               <div>
                 <div className="flex gap-2 mb-3">
-                  {PREVIEW_CITIES.slice(0, 3).map(c => (
-                    <div key={c.id} className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center text-lg">
-                      {c.flag}
+                  {['🏺','🎨','🎸','🎹','📸'].map(e => (
+                    <div key={e} className="w-9 h-9 rounded-xl bg-white border border-violet-100 shadow-sm flex items-center justify-center text-lg">
+                      {e}
                     </div>
                   ))}
                 </div>
-                <h3 className="text-white font-black text-lg mb-1">🚗 Vibe Mode</h3>
-                <p className="text-white/60 text-xs mb-3">Drive through world cities with local FM radio</p>
+                <h3 className="text-slate-900 font-black text-lg mb-1">✨ Vibe Mode</h3>
+                <p className="text-slate-500 text-xs mb-3">Try pottery, resin art, guitar, piano & photography virtually</p>
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-pink-500/20 text-pink-400 border border-pink-500/30">🌃 Night</span>
-                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30">🌅 Sunset</span>
-                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">🌧️ Rain</span>
+                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200">🏺 Pottery</span>
+                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-purple-50 text-purple-600 border border-purple-200">🎸 Guitar</span>
+                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-200">🎹 Piano</span>
                 </div>
               </div>
             </div>
-            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
+            <div className="absolute inset-0 bg-violet-50/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
           </div>
         )}
       </div>
 
       {/* Main content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Trending events */}
         <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className={`text-lg font-bold ${isStudy ? 'text-slate-900' : 'text-white'}`}>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
               {isStudy ? '🔥 Trending Events' : '✨ Trending Activities'}
             </h2>
             <Link href={isStudy ? '/dashboard/events' : '/dashboard/hobby-events'}
-              className={`flex items-center gap-1 text-sm font-medium hover:underline ${isStudy ? 'text-blue-600' : 'text-purple-400'}`}>
+              className="flex items-center gap-1 text-sm font-medium hover:underline text-blue-600">
               View all <ArrowRight size={14} />
             </Link>
           </div>
           <div className="space-y-3">
             {trendingEvents.map(event => (
               <div key={event.id} onClick={() => setSelectedEvent(event)}
-                className={`w-full flex gap-4 p-4 rounded-2xl border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer ${
-                  isStudy ? 'bg-white border-slate-100 hover:border-blue-200' : 'fun-card hover:-translate-y-1'
-                }`}>
-                <img src={event.image} alt={event.title} className="w-16 h-16 rounded-xl object-cover shrink-0" />
+                className="w-full flex gap-3 p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer bg-white border-slate-100 hover:border-blue-200">
+                <img src={event.image} alt={event.title} className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl object-cover shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className={`font-bold text-sm truncate ${isStudy ? 'text-slate-900' : 'text-white'}`}>{event.title}</h3>
-                    <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${isStudy ? 'bg-blue-50 text-blue-600' : 'bg-purple-900/50 text-purple-300'}`}>
+                    <h3 className="font-bold text-sm truncate text-slate-900">{event.title}</h3>
+                    <span className="shrink-0 text-xs px-2 py-0.5 rounded-full font-medium bg-blue-50 text-blue-600">
                       {event.category}
                     </span>
                   </div>
@@ -199,11 +195,11 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex gap-1 mt-2 flex-wrap">
                     {event.tags.slice(0, 3).map(tag => (
-                      <span key={tag} className={`text-xs px-2 py-0.5 rounded-md ${isStudy ? 'bg-slate-100 text-slate-500' : 'bg-slate-700 text-slate-400'}`}>{tag}</span>
+                      <span key={tag} className="text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-500">{tag}</span>
                     ))}
                   </div>
                 </div>
-                <div className={`shrink-0 self-center text-xs font-semibold px-3 py-1.5 rounded-xl ${isStudy ? 'bg-blue-50 text-blue-600' : 'bg-purple-900/50 text-purple-300'}`}>
+                <div className="shrink-0 self-center text-xs font-semibold px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600">
                   View →
                 </div>
               </div>
@@ -212,26 +208,22 @@ export default function DashboardPage() {
         </div>
 
         {/* Right sidebar — Badges + Progress */}
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           {/* Challenge progress */}
-          <div className={`rounded-2xl p-5 border ${isStudy ? 'bg-white border-slate-100' : 'fun-card'}`}>
+          <div className="rounded-2xl p-5 border bg-white border-slate-100">
             <div className="flex items-center justify-between mb-4">
-              <h3 className={`font-bold text-sm ${isStudy ? 'text-slate-900' : 'text-white'}`}>🎯 Your Progress</h3>
-              <Link href="/dashboard/challenges" className={`text-xs hover:underline ${isStudy ? 'text-blue-600' : 'text-purple-400'}`}>View all</Link>
+              <h3 className="font-bold text-sm text-slate-900">🎯 Your Progress</h3>
+              <Link href="/dashboard/challenges" className="text-xs hover:underline text-blue-600">View all</Link>
             </div>
             <div className="space-y-3">
-              {[
-                { icon: '🚀', title: 'First Step', progress: 100, completed: true },
-                { icon: '🤝', title: 'Team Player', progress: 100, completed: true },
-                { icon: '🎯', title: 'Opportunity Hunter', progress: 66, completed: false },
-              ].filter(c => isStudy ? true : ['🦋','✈️','🎨'].includes(c.icon)).map(c => (
+              {CHALLENGES.filter(c => c.category === (isStudy ? 'study' : 'fun')).slice(0, 3).map(c => (
                 <div key={c.title}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className={`text-xs font-medium ${isStudy ? 'text-slate-700' : 'text-slate-300'}`}>{c.icon} {c.title}</span>
-                    <span className={`text-xs ${isStudy ? 'text-slate-400' : 'text-slate-500'}`}>{c.progress}%</span>
+                    <span className="text-xs font-medium text-slate-700">{c.icon} {c.title}</span>
+                    <span className="text-xs text-slate-400">{c.progress}%</span>
                   </div>
-                  <div className={`h-2 rounded-full overflow-hidden ${isStudy ? 'bg-slate-100' : 'bg-slate-700'}`}>
-                    <div className={`h-full rounded-full transition-all duration-1000 ${c.completed ? 'bg-green-500' : isStudy ? 'bg-blue-500' : 'bg-purple-500'}`}
+                  <div className="h-2 rounded-full overflow-hidden bg-slate-100">
+                    <div className={`h-full rounded-full transition-all duration-1000 ${c.completed ? 'bg-green-500' : 'bg-blue-500'}`}
                       style={{ width: `${c.progress}%` }} />
                   </div>
                 </div>
@@ -240,13 +232,11 @@ export default function DashboardPage() {
           </div>
 
           {/* Badges */}
-          <div className={`rounded-2xl p-5 border ${isStudy ? 'bg-white border-slate-100' : 'fun-card'}`}>
-            <h3 className={`font-bold text-sm mb-4 ${isStudy ? 'text-slate-900' : 'text-white'}`}>🏅 Badges</h3>
+          <div className="rounded-2xl p-5 border bg-white border-slate-100">
+            <h3 className="font-bold text-sm mb-4 text-slate-900">🏅 Badges</h3>
             <div className="flex flex-wrap gap-2">
               {u.badges.map(badge => (
-                <div key={badge} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold ${
-                  isStudy ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border border-blue-100' : 'bg-gradient-to-r from-purple-900/50 to-pink-900/50 text-purple-300 border border-purple-700/50'
-                }`}>
+                <div key={badge} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border border-blue-100">
                   <Trophy size={11} /> {badge}
                 </div>
               ))}

@@ -5,19 +5,18 @@ import { useApp } from '@/lib/context'
 import Navbar from '@/components/shared/Navbar'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { isLoggedIn, mode, isTransitioning } = useApp()
+  const { isLoggedIn, isTransitioning } = useApp()
   const router = useRouter()
 
   useEffect(() => {
     if (!isLoggedIn) router.push('/auth')
   }, [isLoggedIn])
 
-  const isStudy = mode === 'study'
-
   return (
-    <div className={`min-h-screen transition-all duration-500 ${isStudy ? 'bg-slate-50' : 'fun-bg'}`}>
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
-      <main className={`pt-16 transition-all duration-500 ${isTransitioning ? 'opacity-0 scale-[0.99]' : 'opacity-100 scale-100'}`}>
+      {/* pt-16 for top navbar, pb-20 md:pb-0 for mobile bottom nav */}
+      <main className={`pt-16 pb-20 md:pb-0 transition-all duration-300 ${isTransitioning ? 'opacity-0 scale-[0.99]' : 'opacity-100 scale-100'}`}>
         {children}
       </main>
     </div>

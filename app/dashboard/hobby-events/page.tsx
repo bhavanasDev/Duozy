@@ -51,7 +51,7 @@ export default function HobbyEventsPage() {
             <TrendingUp size={15} className="text-orange-400" />
             <h2 className="text-base font-bold text-white">Trending Now</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
             {filtered.filter(e => e.trending).map(event => (
               <EventCard key={event.id} event={event} liked={liked} registered={registered}
                 onLike={toggleLike} onClick={() => { setSelectedEvent(event); setRegisterOpen(false) }} />
@@ -62,7 +62,7 @@ export default function HobbyEventsPage() {
 
       <div>
         <h2 className="text-base font-bold text-white mb-4">All Activities</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
           {filtered.map(event => (
             <EventCard key={event.id} event={event} liked={liked} registered={registered}
               onLike={toggleLike} onClick={() => { setSelectedEvent(event); setRegisterOpen(false) }} />
@@ -137,7 +137,7 @@ function EventCard({ event, liked, registered, onLike, onClick }: any) {
   return (
     <div onClick={onClick}
       className="rounded-2xl overflow-hidden border border-slate-700/50 bg-slate-800/70 hover:border-purple-500/50 transition-all duration-200 hover:shadow-xl hover:shadow-purple-900/20 hover:-translate-y-0.5 group text-left w-full cursor-pointer">
-      <div className="relative h-40 overflow-hidden">
+      <div className="relative h-28 md:h-40 overflow-hidden">
         <img src={event.image} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         {event.trending && <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 bg-orange-500 text-white text-[10px] font-bold rounded-md"><TrendingUp size={9} /> Hot</div>}
@@ -150,7 +150,7 @@ function EventCard({ event, liked, registered, onLike, onClick }: any) {
           <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${event.price === 'Free' ? 'bg-green-500 text-white' : 'bg-white/20 text-white backdrop-blur-sm'}`}>{event.price}</span>
         </div>
       </div>
-      <div className="p-4">
+      <div className="p-2.5 md:p-4">
         <h3 className="font-black text-white text-sm mb-0.5 line-clamp-1">{event.title}</h3>
         <span className="text-xs text-purple-400 font-medium">{event.category}</span>
         <div className="flex gap-2 my-2 text-[11px] text-slate-400">
