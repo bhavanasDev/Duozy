@@ -1,12 +1,11 @@
 'use client'
-import { useState, memo, useMemo } from 'react'
+import { useState, memo } from 'react'
 import dynamic from 'next/dynamic'
 import { useApp } from '@/lib/context'
 import { useMapData } from '@/components/map/useMapData'
 import { Filter, X } from 'lucide-react'
 import type { Opportunity, OpportunityFilter } from '@/types/opportunity'
 
-// Lazy-load the heavy map — only renders when visible
 const MapContainer = dynamic(
   () => import('@/components/map/MapContainer').then(m => ({ default: m.MapContainer })),
   {
@@ -22,7 +21,6 @@ const MapContainer = dynamic(
   }
 )
 
-// ── Isolated: Filter Bar ──────────────────────────────────────────────────────
 const FILTER_OPTIONS: { value: OpportunityFilter; label: string }[] = [
   { value: 'all',        label: 'All' },
   { value: 'hackathon',  label: '🏆 Hackathon' },
@@ -53,7 +51,6 @@ const FilterBar = memo(function FilterBar({
   )
 })
 
-// ── Page: wires everything together ──────────────────────────────────────────
 export default function MapPage() {
   const { mode, completeTask } = useApp()
   const isStudy = mode === 'study'
@@ -109,7 +106,6 @@ export default function MapPage() {
         />
       </div>
 
-      {/* Apply Modal */}
       {applyTarget && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
           onClick={() => setApplyTarget(null)}>
@@ -124,7 +120,6 @@ export default function MapPage() {
                 <X size={16} />
               </button>
             </div>
-
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>

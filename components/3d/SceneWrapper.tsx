@@ -11,6 +11,7 @@ interface SceneWrapperProps {
   maxPolarAngle?: number
   environmentPreset?: 'studio' | 'city' | 'sunset' | 'dawn' | 'night' | 'warehouse' | 'forest' | 'apartment' | 'lobby' | 'park'
   shadows?: boolean
+  bgColor?: string
 }
 
 export default function SceneWrapper({

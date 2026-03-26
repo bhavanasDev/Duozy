@@ -29,13 +29,10 @@ export default function GroupsPage() {
   }
 
   function handleJoin(id: string) {
-    setGroups(gs => {
-      const updated = gs.map(g => g.id === id ? { ...g, pending: true } : g)
-      const joinedCount = updated.filter(g => g.joined || g.pending).length
-      completeTask('b5t1')
-      if (joinedCount >= 2) completeTask('b5t2')
-      return updated
-    })
+    setGroups(gs => gs.map(g => g.id === id ? { ...g, pending: true } : g))
+    completeTask('b5t1')
+    const joinedCount = groups.filter(g => g.joined || g.pending).length + 1
+    if (joinedCount >= 2) completeTask('b5t2')
   }
 
   function handleLeave(id: string) {

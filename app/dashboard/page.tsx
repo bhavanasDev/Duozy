@@ -5,14 +5,6 @@ import { DEMO_USER, STUDY_EVENTS, FUN_EVENTS, OPPORTUNITIES, CHALLENGES } from '
 import Link from 'next/link'
 import { ArrowRight, Trophy, BookOpen, Palette, Clock, X, MapPin, Users, Briefcase, ExternalLink } from 'lucide-react'
 
-const PREVIEW_CITIES = [
-  { id: 'tokyo', flag: '🇯🇵', name: 'Tokyo', color: '#F43F5E' },
-  { id: 'paris', flag: '🇫🇷', name: 'Paris', color: '#8B5CF6' },
-  { id: 'nyc', flag: '🇺🇸', name: 'New York', color: '#F97316' },
-  { id: 'mumbai', flag: '🇮🇳', name: 'Mumbai', color: '#EAB308' },
-  { id: 'london', flag: '🇬🇧', name: 'London', color: '#06B6D4' },
-]
-
 const TYPE_COLORS: Record<string, string> = { hiring: '#2563EB', hackathon: '#F97316', exam: '#8B5CF6' }
 const TYPE_LABELS: Record<string, string> = { hiring: '💼', hackathon: '🏆', exam: '📝' }
 const PIN_POS: Record<string, { top: string; left: string }> = {
@@ -154,36 +146,25 @@ export default function DashboardPage() {
             )}
         </div>
         ) : (
-          <div className="hidden lg:block lg:col-span-2 relative rounded-3xl overflow-hidden border border-slate-200 min-h-[220px] cursor-pointer group bg-gradient-to-br from-violet-50 to-purple-50"
-            onClick={() => window.location.href = '/dashboard/vibe'}>
+          <div className="hidden lg:block lg:col-span-2 relative rounded-3xl overflow-hidden border border-slate-200 min-h-[220px] bg-gradient-to-br from-violet-50 to-purple-50">
             <div className="absolute inset-0 opacity-10"
               style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=60)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
             <div className="relative z-10 p-5 h-full flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
-                  <span className="text-violet-600 text-[10px] font-bold uppercase tracking-widest">Virtual Experience</span>
+                  <span className="text-violet-600 text-[10px] font-bold uppercase tracking-widest">Hobby Events</span>
                 </div>
-                <span className="text-xs text-violet-500 bg-violet-50 border border-violet-200 px-2 py-1 rounded-full">5 activities</span>
               </div>
               <div>
-                <div className="flex gap-2 mb-3">
-                  {['🏺','🎨','🎸','🎹','📸'].map(e => (
-                    <div key={e} className="w-9 h-9 rounded-xl bg-white border border-violet-100 shadow-sm flex items-center justify-center text-lg">
-                      {e}
-                    </div>
-                  ))}
-                </div>
-                <h3 className="text-slate-900 font-black text-lg mb-1">✨ Virtual Experiences</h3>
-                <p className="text-slate-500 text-xs mb-3">Try pottery, resin art, guitar, piano & photography virtually</p>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200">🏺 Pottery</span>
-                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-purple-50 text-purple-600 border border-purple-200">🎸 Guitar</span>
-                  <span className="px-2 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-200">🎹 Piano</span>
-                </div>
+                <h3 className="text-slate-900 font-black text-lg mb-1">🎨 Explore Hobbies</h3>
+                <p className="text-slate-500 text-xs mb-3">Discover workshops, experiences, and adventures near you</p>
+                <Link href="/dashboard/hobby-events"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-violet-600 text-white hover:bg-violet-700 transition-colors">
+                  Browse Events →
+                </Link>
               </div>
             </div>
-            <div className="absolute inset-0 bg-violet-50/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
           </div>
         )}
       </div>

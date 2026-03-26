@@ -126,7 +126,6 @@ export default function ChallengesPage() {
     setTimeout(() => setToast(null), 3000)
   }
 
-  // Task-to-route mapping: tasks can only be completed by doing the actual action on the site
   const TASK_ROUTES: Record<string, string> = {
     b1t1: '/dashboard/events',
     b1t2: '/dashboard/map',
@@ -143,9 +142,6 @@ export default function ChallengesPage() {
     b5t1: '/dashboard/groups',
     b5t2: '/dashboard/groups',
     b5t3: '/dashboard/groups',
-    b6t1: '/dashboard/vibe',
-    b6t2: '/dashboard/vibe',
-    b6t3: '/dashboard/vibe',
     b7t1: '/dashboard/hobby-events',
     b7t2: '/dashboard/hobby-events',
     b7t3: '/dashboard/hobby-events',

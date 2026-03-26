@@ -17,8 +17,8 @@ export default function TeamsPage() {
     setRequests(r => ({ ...r, [id]: 'pending' }))
     const newCount = requestCount + 1
     setRequestCount(newCount)
-    completeTask('b2t2') // idempotent — fires on first, ignored after
-    if (newCount >= 2) completeTask('b2t2') // already idempotent
+    completeTask('b2t2')
+    if (newCount >= 2) completeTask('b2t2')
   }
 
   function cancelRequest(id: string) {
